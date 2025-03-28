@@ -1,5 +1,30 @@
 import java.util.Arrays;
 public class lc198houserobber {
+
+    /*
+    solution 3 25
+     */
+    static class Solution2 {
+        public int rob(int[] nums) {
+            int[] maxStole = new int[nums.length];
+        /*
+        assuming house row starts with index
+        */
+            for(int i=nums.length-1;i>=0;i--){
+                int ms2=0;
+                int ms1=0;
+                if (i+2<=nums.length-1){
+                    ms2 = maxStole[i+2];
+                }
+                if (i+1<=nums.length-1){
+                    ms1 = maxStole[i+1];
+                }
+                maxStole[i] = Math.max(ms1, nums[i]+ms2);
+            }
+            return maxStole[0];
+
+        }
+    }
     /*
     so if line is:
     if (memoArr[i]>0) { return memoArr[i];}
