@@ -1,7 +1,23 @@
 import java.util.Arrays;
 
 public class lc322coin_change {
-    static class Solution {
+    class Solution01 {
+        public int coinChange(int[] coins, int amount) {
+            int[] dp_sol = new int[amount+1];
+            Arrays.fill(dp_sol, amount+1);
+            dp_sol[0]=0;
+            for(int c: coins){
+                for(int i=0; i<=amount; i++){
+                    if(i<c){
+                        continue;
+                    }
+                    dp_sol[i] = Math.min(dp_sol[i-c]+1,dp_sol[i]);
+                }
+            }
+            return (dp_sol[amount]>amount) ? -1 : dp_sol[amount];
+        }
+    }
+    static class Solution00 {
         private int recurse(int[] coins, int remain, int[] minimums, int inf){
             if (remain<0){
                 return -1;
@@ -31,7 +47,7 @@ public class lc322coin_change {
     }
 
     public static void main(String[] args){
-        Solution S = new Solution();
+        Solution00 S = new Solution00();
         int[] coins = {1,2,5};
         S.coinChange(coins,122);
     }

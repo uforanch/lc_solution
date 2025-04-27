@@ -1,6 +1,73 @@
 import java.util.*;
 public class lc621TaskScheduler {
     static class Solution {
+
+        public int leastInterval(char[] tasks, int n) {
+            Map<Integer, Integer> task_count = new HashMap<>();
+            Queue<Integer[]> task_c = new LinkedList<>();
+
+            int time = 0;
+            Queue<Integer[]> task_q = new PriorityQueue<>((a,b)->a[0]-b[0]);
+
+            int tasks_remaining = tasks.length;
+            for (char t: tasks) {
+
+                int t_i = (int) t;
+                task_count.put(t_i, task_count.getOrDefault(t_i, 0)+1);
+
+            }
+            for (int t: task_count.keySet()){
+                int t_count = task_count.get(t);
+                task_q.add(new Integer[] {-1*t_count, t});
+            }
+
+            while(tasks_remaining>0){
+                if (time>=n*tasks.length*2){
+                    return -1;
+                }
+
+                while (task_c.size()>0){
+                    if (task_c.peek()[0]<=time) {
+                        Integer[] task_tuple = task_c.poll();
+                        int t = task_tuple[1];
+                        int t_count = task_count.get(t);
+                        task_tuple[0] = -1 * t_count;
+                        task_q.add(task_tuple);
+                    } else {
+                        break;
+                    }
+                }
+                if (task_q.size()==0){
+                    time++;
+                    continue;
+                }
+
+
+                Integer[] task_tuple = task_q.poll();
+                int t =  task_tuple[1];
+                int t_count = task_count.get(t);
+
+
+                if (t_count>0){
+                    //process job
+                    t_count--;
+                    task_count.put(t, t_count);
+                    tasks_remaining-=1;
+                    task_tuple[0] = time+n+1;
+                    task_tuple[1] = t;
+                    if (t_count>0){
+                        task_c.add(task_tuple);
+                    }
+                }
+                time+=1;
+
+            }
+            return time;
+
+
+        }
+    }
+    static class Solution_Class {
         static class Task implements Comparable {
             private static Map<Character, Task> taskMap = new HashMap<>();
             private static List<Task> taskList = new ArrayList<>();
@@ -143,7 +210,10 @@ public class lc621TaskScheduler {
 
     public  static void main(String[] args){
         Solution s = new Solution();
-        s.testTask();
+        //s.testTask();
+        char[] t1 = {'A', 'A', 'A', 'B', 'B', 'B'};
+        int n=2;
+        System.out.println(s.leastInterval(t1,n));
     }
 }
 
